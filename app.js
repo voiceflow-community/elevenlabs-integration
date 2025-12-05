@@ -32,10 +32,21 @@ app.post('/synthesize', async (req, res) => {
   // Remove double quotes from text
   text = text.replace(/"/g, '')
 
-  const voice =
-    req.body.voice == 0
-      ? '21m00Tcm4TlvDq8ikWAM'
-      : req.body.voice || '21m00Tcm4TlvDq8ikWAM'
+  // Define a fixed allow-list of permitted ElevenLabs voice IDs
+  const allowedVoices = [
+    '21m00Tcm4TlvDq8ikWAM', // Default voice
+    // Add other permitted voice IDs here
+    // 'EXAMPLE_ID_1',
+    // 'EXAMPLE_ID_2',
+    // etc.
+  ];
+
+  let voice = '21m00Tcm4TlvDq8ikWAM'; // Default voice ID
+  if (req.body.voice == 0) {
+    voice = '21m00Tcm4TlvDq8ikWAM';
+  } else if (typeof req.body.voice === 'string' && allowedVoices.includes(req.body.voice)) {
+    voice = req.body.voice;
+  }
 
   const model = req.body.model || 'eleven_multilingual_v2'
 
